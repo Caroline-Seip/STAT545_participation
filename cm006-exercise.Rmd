@@ -112,9 +112,13 @@ ggplot(gapminder, aes(lifeExp)) +
 
 4. Instead of a histogram, let's create a kernel density plot.
 
+Can play with bin width bw= in brackets of geom_density
+fill=orange in geom_density brackets
+
 ```{r}
 ggplot(gapminder, aes(lifeExp)) +
-  geom_density()
+  geom_histogram(aes(y=..density..)) +
+  geom_density(fill="turquoise")
 ```
 
 
@@ -132,17 +136,25 @@ Let's make _box plots_ of population for each continent. Note: y-axis is much be
 | Grammar Component     | Specification |
 |-----------------------|---------------|
 | __data__              | `gapminder` |
-| __aesthetic mapping__ |  |
-| __geometric object__  |  |
-| scale                 |  |
-| statistical transform |  |
+| __aesthetic mapping__ | `x` and `y` |
+| __geometric object__  | boxplot |
+| scale                 | log-y |
+| statistical transform | 5-number summary |
 
 2. Initiate the `ggplot` call, with the log y scale, and store it in the variable `a`. Print out `a`.
 
+```{r}
+a <- ggplot(gapminder, aes(continent, pop)) +
+  scale_y_log10()
+a
+```
 
 
 3. Add the boxplot geom to `a`.
 
+```{r}
+a + geom_boxplot()
+```
 
 
 4. A violin plot is a kernel density on its side, made symmetric. Add that geom to `a`.
