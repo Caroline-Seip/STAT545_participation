@@ -156,9 +156,12 @@ a
 a + geom_boxplot()
 ```
 
-
 4. A violin plot is a kernel density on its side, made symmetric. Add that geom to `a`.
     - What's better here, boxplots or violin plots? Why?
+
+```{r}
+a + geom_violin()
+```
 
 5. Optional: git stage and commit
 
