@@ -57,7 +57,9 @@ These functions we've seen are called __vectorized functions__.
 Use `summarize()` to compute the mean and median life expectancy using all entries:
 
 ```{r}
-
+gapminder %>% 
+  summarize(mu = mean(lifeExp),
+            md = median(lifeExp))
 ```
 
 Do the same thing, but try:
@@ -66,7 +68,14 @@ Do the same thing, but try:
 2. grouping by continent and country
 
 ```{r}
-
+gapminder %>% 
+  group_by(country) %>% 
+  summarize(mu = mean(lifeExp),
+            md = median(lifeExp))
+gapminder %>% 
+  group_by(continent,country) %>% 
+  summarize(mu = mean(lifeExp),
+            md = median(lifeExp))
 ```
 
 - Notice the columns that are kept. 
@@ -75,23 +84,33 @@ Do the same thing, but try:
 
 Question: What if I wanted to keep the other numeric columns (gdpPercap, pop)? Can I? Would this even make sense?
 
+*No, nothing would make sense to be in that column, multiple values for each row*
+
 For each continent: What is the smallest country-wide median GDP per capita?
 
 ```{r}
-
+gapminder %>% 
+  group_by(continent, country) %>% 
+  summarize(md = median(gdpPercap)) %>% 
+  summarize(min = min(md))
 ```
 
 Note that ggplot2's grouping is different from dplyr's! Try making a spaghetti plot of lifeExp over time for each coutry, by piping in a grouped data frame -- it won't work:
 
 ```{r}
-
+gapminder %>%
+  group_by(country) %>% 
+  ggplot(aes(year, lifeExp)) +
+  geom_line()
 ```
-
 
 Your turn! For each continent, what is the median GDP per capita of countries with high (>60) life expectancy vs countries with low (<=60)? Sort this data frame by median GDP per capita.
 
 ```{r}
-
+gapminder %>% 
+  group_by(continent, lifeExp > 60) %>% 
+  summarize(md = median(gdpPercap)) %>% 
+  arrange(md)
 ```
 
 There are special functions to summarize by. Let's see some of them:
@@ -99,16 +118,23 @@ There are special functions to summarize by. Let's see some of them:
 - `n()`: Number of rows in the group.
 - `n_distinct()`
 
+```{r}
+gapminder %>% 
+  group_by(continent) %>% 
+  summarize(num = n())
+```
+
 Convenience functions:
 
 - `tally()` (= `summarize(n = n())`)
 - `count(...)` (= `group_by(...) %>% tally()`)
 
-n_distinct: How many years of record does each country have?
-
 ```{r}
-
+gapminder %>%
+  count(continent)
 ```
+
+n_distinct: How many years of record does each country have?
 
 count
 
@@ -129,7 +155,12 @@ For any generic output, we can use dplyr's `do()` function -- but that's a topic
 Calculate the growth in population since the first year on record _for each country_. `first()` is useful.
 
 ```{r}
-
+gapminder %>% 
+  group_by(country) %>% 
+  mutate(growth = pop - first(pop))
+gapminder %>% 
+  group_by(country) %>% 
+  mutate(change = pop - lag(pop))
 ```
 
 Notice that `dplyr` has retained the original grouping.
@@ -137,14 +168,14 @@ Notice that `dplyr` has retained the original grouping.
 How about growth compared to `1972`?
 
 ```{r}
-
+gapminder %>% 
+  group_by(country) %>% 
+  mutate(growth = pop - pop[year == 1972])
 ```
 
 Make a new variable `pop_last_time`, as the "lag-1" population -- that is, the population from the previous entry of that country. Use the `lag` function.
 
-```{r}
-
-```
+*Already did this*
 
 Similar: `lead` function.
 
@@ -157,13 +188,22 @@ Your turn: Use what we learned to answer the following questions.
 1. Determine the country that experienced the sharpest 5-year drop in life expectancy, in each continent.
 
 ```{r}
-
+gapminder %>% 
+  group_by(continent, country) %>% 
+  mutate(gain = lifeExp - lag(lifeExp)) %>% 
+  filter(!is.na(gain)) %>% 
+  summarize(min = min(gain)) %>% 
+  summarize(min = min(min)) %>% 
+  arrange(min)
 ```
 
 2. Compute the relative gdp (NOT per capita!) of each country compared to Canada (= GDP of a country / GDP of Canada).
 
 ```{r}
-
+cda <- gapminder %>% 
+  mutate(gdp = gdpPercap * pop) %>% 
+  filter(country == "Canada") %>% 
+  `[[`("gdpPercap")
 ```
 
 Sanity check: are Canada's numbers = 1? What is the spread of numbers like (should be small)?
