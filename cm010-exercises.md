@@ -305,9 +305,43 @@ Types of filtering join
 
 ### example for `semi_join`: All rows in `a` that have a match in `b`
 
+``` r
+semi_join(a, b)
+```
+
+    ## Joining, by = "x1"
+
+    ## # A tibble: 2 x 2
+    ##   x1       x2
+    ##   <chr> <int>
+    ## 1 A         1
+    ## 2 B         2
+
 ### example for `anti_join`: All rows in `a` that do not have a match in `b`
 
+``` r
+anti_join(a,b)
+```
+
+    ## Joining, by = "x1"
+
+    ## # A tibble: 1 x 2
+    ##   x1       x2
+    ##   <chr> <int>
+    ## 1 C         3
+
 ### example of joinin by matching two variables (e.g., "x1", "x2") from both datasets `a` and `c`
+
+``` r
+semi_join(a, c)
+```
+
+    ## Joining, by = c("x1", "x2")
+
+    ## # A tibble: 1 x 2
+    ##   x1       x2
+    ##   <chr> <int>
+    ## 1 A         1
 
 Types of Set Operations for two datasets
 ----------------------------------------
@@ -340,9 +374,49 @@ Types of Set Operations for two datasets
 
 ### example for `intersect`: Rows that appear in both `y` and `z`
 
+``` r
+intersect(y,z)
+```
+
+    ## # A tibble: 2 x 2
+    ##   x1       x2
+    ##   <chr> <int>
+    ## 1 B         2
+    ## 2 C         3
+
 ### example for `union`: Rows that appear in either or both `y` and `z`
 
+``` r
+union(y,z)
+```
+
+    ## # A tibble: 4 x 2
+    ##   x1       x2
+    ##   <chr> <int>
+    ## 1 D         4
+    ## 2 C         3
+    ## 3 B         2
+    ## 4 A         1
+
 ### example for `setdiff`: Rows that appear in `y` but not `z`. **Caution:** `setdiff` for `y` to `z` and `z` to `y` are different.
+
+``` r
+setdiff(y,z)
+```
+
+    ## # A tibble: 1 x 2
+    ##   x1       x2
+    ##   <chr> <int>
+    ## 1 A         1
+
+``` r
+setdiff(z,y)
+```
+
+    ## # A tibble: 1 x 2
+    ##   x1       x2
+    ##   <chr> <int>
+    ## 1 D         4
 
 ### what happen if colnames are differentin `y` and `x`? Is there any error message and why?
 
@@ -364,9 +438,45 @@ Types of binding datasets
 
 ### example for `bind_rows`: Append `z` to `y` as new rows
 
+``` r
+bind_rows(y,z)
+```
+
+    ## # A tibble: 6 x 2
+    ##   x1       x2
+    ##   <chr> <int>
+    ## 1 A         1
+    ## 2 B         2
+    ## 3 C         3
+    ## 4 B         2
+    ## 5 C         3
+    ## 6 D         4
+
 ### example for `bind_cols`: Append `z` to `y` as new columns. **Caution**: matches rows by position. Check colnames after binding.
 
+``` r
+bind_cols(y,z)
+```
+
+    ## # A tibble: 3 x 4
+    ##   x1       x2 x11     x21
+    ##   <chr> <int> <chr> <int>
+    ## 1 A         1 B         2
+    ## 2 B         2 C         3
+    ## 3 C         3 D         4
+
 ### what happen if colnames are different between `y` and `x` datasets?
+
+``` r
+bind_cols(y,x)
+```
+
+    ## # A tibble: 3 x 4
+    ##   x1       x2 x11      x3
+    ##   <chr> <int> <chr> <int>
+    ## 1 A         1 B         2
+    ## 2 B         2 C         3
+    ## 3 C         3 D         4
 
 Practice Exercises
 ------------------
@@ -375,6 +485,70 @@ Practice these concepts in the following exercises. It might help you to first i
 
 ### 1. Filter the rows of `flights2` by matching "year" and "time\_hour" variables to `weather` dataset. Use both `semi_join()` and `anti_join()`
 
+``` r
+semi_join(flights2, weather)
+```
+
+    ## Joining, by = c("year", "time_hour")
+
+    ## # A tibble: 1,000 x 4
+    ##     year tailnum carrier time_hour          
+    ##    <int> <chr>   <chr>   <dttm>             
+    ##  1  2013 N14228  UA      2013-01-01 05:00:00
+    ##  2  2013 N24211  UA      2013-01-01 05:00:00
+    ##  3  2013 N619AA  AA      2013-01-01 05:00:00
+    ##  4  2013 N804JB  B6      2013-01-01 05:00:00
+    ##  5  2013 N668DN  DL      2013-01-01 06:00:00
+    ##  6  2013 N39463  UA      2013-01-01 05:00:00
+    ##  7  2013 N516JB  B6      2013-01-01 06:00:00
+    ##  8  2013 N829AS  EV      2013-01-01 06:00:00
+    ##  9  2013 N593JB  B6      2013-01-01 06:00:00
+    ## 10  2013 N3ALAA  AA      2013-01-01 06:00:00
+    ## # ... with 990 more rows
+
+``` r
+anti_join(flights2, weather)
+```
+
+    ## Joining, by = c("year", "time_hour")
+
+    ## # A tibble: 0 x 4
+    ## # ... with 4 variables: year <int>, tailnum <chr>, carrier <chr>,
+    ## #   time_hour <dttm>
+
 ### 2. Can we apply `set` and `binding` funcions between `flights2` and `weather` datasets. Why and why not?
 
+``` r
+bind_rows(flights2, weather) #but lots of NAs cause nothing lines up
+```
+
+    ## # A tibble: 27,115 x 17
+    ##     year tailnum carrier time_hour           origin month   day  hour  temp
+    ##    <dbl> <chr>   <chr>   <dttm>              <chr>  <dbl> <int> <int> <dbl>
+    ##  1  2013 N14228  UA      2013-01-01 05:00:00 <NA>      NA    NA    NA    NA
+    ##  2  2013 N24211  UA      2013-01-01 05:00:00 <NA>      NA    NA    NA    NA
+    ##  3  2013 N619AA  AA      2013-01-01 05:00:00 <NA>      NA    NA    NA    NA
+    ##  4  2013 N804JB  B6      2013-01-01 05:00:00 <NA>      NA    NA    NA    NA
+    ##  5  2013 N668DN  DL      2013-01-01 06:00:00 <NA>      NA    NA    NA    NA
+    ##  6  2013 N39463  UA      2013-01-01 05:00:00 <NA>      NA    NA    NA    NA
+    ##  7  2013 N516JB  B6      2013-01-01 06:00:00 <NA>      NA    NA    NA    NA
+    ##  8  2013 N829AS  EV      2013-01-01 06:00:00 <NA>      NA    NA    NA    NA
+    ##  9  2013 N593JB  B6      2013-01-01 06:00:00 <NA>      NA    NA    NA    NA
+    ## 10  2013 N3ALAA  AA      2013-01-01 06:00:00 <NA>      NA    NA    NA    NA
+    ## # ... with 27,105 more rows, and 8 more variables: dewp <dbl>,
+    ## #   humid <dbl>, wind_dir <dbl>, wind_speed <dbl>, wind_gust <dbl>,
+    ## #   precip <dbl>, pressure <dbl>, visib <dbl>
+
 ### 3. Let's create a tibble `p` with "x1" and "x2" coulmns and have duplicated element in "x1" column. Create another tibble `q` with "x1" and "x3" columns. Then apply `left_join` function `p` to `q` and `q` to `p`.
+
+``` r
+(p <- tibble(x1 = c("a", "b", "b", "c"), x2 =1:4))
+```
+
+    ## # A tibble: 4 x 2
+    ##   x1       x2
+    ##   <chr> <int>
+    ## 1 a         1
+    ## 2 b         2
+    ## 3 b         3
+    ## 4 c         4
