@@ -3,6 +3,8 @@ title: "cm010 Exercises"
 output: github_document
 ---
 
+For explanation of joins, see cm010 slides on GitHub
+
 ## Install `nycflights13` package
 
 ```{r,eval=FALSE}
@@ -27,26 +29,44 @@ suppressPackageStartupMessages(library(nycflights13))
 
 ### left_join: Join matching rows from `b` to `a` by matching "x1" variable
 
+```{r}
+left_join(a,b, by = "x1")
+```
 
 
 ### right_join: Join matching rows from `a` to `b` by matching "x1" variable.
 
+```{r}
+right_join(a,b, by = "x1")
+```
 
 
 ### inner_join: Join data. Retain only rows in both sets `a` to `b` by matching "x1" variable.
 
+```{r}
+inner_join(a, b, by = "x1")
+```
 
 
 ### full_join: Join data. Retain all values, all rows of `a` to `b` by matching "x1"
 
+```{r}
+full_join(a, b, by = "x1")
+```
 
 
 ### what happen if we do not specify `by` option?
 
+```{r}
+left_join(a,b)
+```
 
 
 ### what happen if we join two different variables (e.g., "x1" to "x3") from two tibbles `a` to `b`?
 
+```{r}
+left_join(a, b, by = c("x1" = "x3")) #x1 column from a dataset, x3 column from b dataset
+```
 
 
 ### what happen if two columns of `a` and `c` datasets have the identical colnames?
@@ -65,7 +85,7 @@ suppressPackageStartupMessages(library(nycflights13))
 ```{r}
 #check the tibbles included in `nycflights13` package
 class(flights)
-
+dim(flights)
 colnames(flights)
 
 colnames(airlines)
@@ -78,21 +98,33 @@ colnames(weather)
 ```{r}
 flights2 <- flights[1:1000,] %>% 
   select(year, tailnum, carrier, time_hour)
+dim(flights2)
 ```
 
 ### 3. Add airline names to `flights2` from `airlines` dataset.
 
 ```{r}
 # Which join function to use?
-
+colnames(airlines)
+colnames(flights2)
+head(flights2)
+left_join(flights2, airlines)
 ```
 
 ### 4. Add `weather` information to the `flights2` dataset by matching "year" and "time_hour" variables.
 
-
+```{r}
+colnames(weather)
+flights2 %>% 
+  left_join(weather, by = c("year", "time_hour"))
+```
 
 ### 5. Add `weather` information to the `flights2` dataset by matching only "time_hour" variable
 
+```{r}
+flights2 %>% 
+  left_join(weather, by = c("time_hour"))
+```
 
 
 ## Types of filtering join

@@ -1,6 +1,8 @@
 cm010 Exercises
 ================
 
+For explanation of joins, see cm010 slides on GitHub
+
 Install `nycflights13` package
 ------------------------------
 
@@ -44,15 +46,83 @@ Types of mutating join
 
 ### left\_join: Join matching rows from `b` to `a` by matching "x1" variable
 
+``` r
+left_join(a,b, by = "x1")
+```
+
+    ## # A tibble: 3 x 3
+    ##   x1       x2 x3   
+    ##   <chr> <int> <chr>
+    ## 1 A         1 T    
+    ## 2 B         2 F    
+    ## 3 C         3 <NA>
+
 ### right\_join: Join matching rows from `a` to `b` by matching "x1" variable.
+
+``` r
+right_join(a,b, by = "x1")
+```
+
+    ## # A tibble: 3 x 3
+    ##   x1       x2 x3   
+    ##   <chr> <int> <chr>
+    ## 1 A         1 T    
+    ## 2 B         2 F    
+    ## 3 D        NA T
 
 ### inner\_join: Join data. Retain only rows in both sets `a` to `b` by matching "x1" variable.
 
+``` r
+inner_join(a, b, by = "x1")
+```
+
+    ## # A tibble: 2 x 3
+    ##   x1       x2 x3   
+    ##   <chr> <int> <chr>
+    ## 1 A         1 T    
+    ## 2 B         2 F
+
 ### full\_join: Join data. Retain all values, all rows of `a` to `b` by matching "x1"
+
+``` r
+full_join(a, b, by = "x1")
+```
+
+    ## # A tibble: 4 x 3
+    ##   x1       x2 x3   
+    ##   <chr> <int> <chr>
+    ## 1 A         1 T    
+    ## 2 B         2 F    
+    ## 3 C         3 <NA> 
+    ## 4 D        NA T
 
 ### what happen if we do not specify `by` option?
 
+``` r
+left_join(a,b)
+```
+
+    ## Joining, by = "x1"
+
+    ## # A tibble: 3 x 3
+    ##   x1       x2 x3   
+    ##   <chr> <int> <chr>
+    ## 1 A         1 T    
+    ## 2 B         2 F    
+    ## 3 C         3 <NA>
+
 ### what happen if we join two different variables (e.g., "x1" to "x3") from two tibbles `a` to `b`?
+
+``` r
+left_join(a, b, by = c("x1" = "x3")) #x1 column from a dataset, x3 column from b dataset
+```
+
+    ## # A tibble: 3 x 3
+    ##   x1       x2 x1.y 
+    ##   <chr> <int> <chr>
+    ## 1 A         1 <NA> 
+    ## 2 B         2 <NA> 
+    ## 3 C         3 <NA>
 
 ### what happen if two columns of `a` and `c` datasets have the identical colnames?
 
@@ -83,6 +153,12 @@ class(flights)
     ## [1] "tbl_df"     "tbl"        "data.frame"
 
 ``` r
+dim(flights)
+```
+
+    ## [1] 336776     19
+
+``` r
 colnames(flights)
 ```
 
@@ -111,17 +187,116 @@ colnames(weather)
 ``` r
 flights2 <- flights[1:1000,] %>% 
   select(year, tailnum, carrier, time_hour)
+dim(flights2)
 ```
+
+    ## [1] 1000    4
 
 ### 3. Add airline names to `flights2` from `airlines` dataset.
 
 ``` r
 # Which join function to use?
+colnames(airlines)
 ```
+
+    ## [1] "carrier" "name"
+
+``` r
+colnames(flights2)
+```
+
+    ## [1] "year"      "tailnum"   "carrier"   "time_hour"
+
+``` r
+head(flights2)
+```
+
+    ## # A tibble: 6 x 4
+    ##    year tailnum carrier time_hour          
+    ##   <int> <chr>   <chr>   <dttm>             
+    ## 1  2013 N14228  UA      2013-01-01 05:00:00
+    ## 2  2013 N24211  UA      2013-01-01 05:00:00
+    ## 3  2013 N619AA  AA      2013-01-01 05:00:00
+    ## 4  2013 N804JB  B6      2013-01-01 05:00:00
+    ## 5  2013 N668DN  DL      2013-01-01 06:00:00
+    ## 6  2013 N39463  UA      2013-01-01 05:00:00
+
+``` r
+left_join(flights2, airlines)
+```
+
+    ## Joining, by = "carrier"
+
+    ## # A tibble: 1,000 x 5
+    ##     year tailnum carrier time_hour           name                    
+    ##    <int> <chr>   <chr>   <dttm>              <chr>                   
+    ##  1  2013 N14228  UA      2013-01-01 05:00:00 United Air Lines Inc.   
+    ##  2  2013 N24211  UA      2013-01-01 05:00:00 United Air Lines Inc.   
+    ##  3  2013 N619AA  AA      2013-01-01 05:00:00 American Airlines Inc.  
+    ##  4  2013 N804JB  B6      2013-01-01 05:00:00 JetBlue Airways         
+    ##  5  2013 N668DN  DL      2013-01-01 06:00:00 Delta Air Lines Inc.    
+    ##  6  2013 N39463  UA      2013-01-01 05:00:00 United Air Lines Inc.   
+    ##  7  2013 N516JB  B6      2013-01-01 06:00:00 JetBlue Airways         
+    ##  8  2013 N829AS  EV      2013-01-01 06:00:00 ExpressJet Airlines Inc.
+    ##  9  2013 N593JB  B6      2013-01-01 06:00:00 JetBlue Airways         
+    ## 10  2013 N3ALAA  AA      2013-01-01 06:00:00 American Airlines Inc.  
+    ## # ... with 990 more rows
 
 ### 4. Add `weather` information to the `flights2` dataset by matching "year" and "time\_hour" variables.
 
+``` r
+colnames(weather)
+```
+
+    ##  [1] "origin"     "year"       "month"      "day"        "hour"      
+    ##  [6] "temp"       "dewp"       "humid"      "wind_dir"   "wind_speed"
+    ## [11] "wind_gust"  "precip"     "pressure"   "visib"      "time_hour"
+
+``` r
+flights2 %>% 
+  left_join(weather, by = c("year", "time_hour"))
+```
+
+    ## # A tibble: 2,888 x 17
+    ##     year tailnum carrier time_hour           origin month   day  hour  temp
+    ##    <dbl> <chr>   <chr>   <dttm>              <chr>  <dbl> <int> <int> <dbl>
+    ##  1  2013 N14228  UA      2013-01-01 05:00:00 EWR        1     1     5  39.0
+    ##  2  2013 N14228  UA      2013-01-01 05:00:00 JFK        1     1     5  39.0
+    ##  3  2013 N14228  UA      2013-01-01 05:00:00 LGA        1     1     5  39.9
+    ##  4  2013 N24211  UA      2013-01-01 05:00:00 EWR        1     1     5  39.0
+    ##  5  2013 N24211  UA      2013-01-01 05:00:00 JFK        1     1     5  39.0
+    ##  6  2013 N24211  UA      2013-01-01 05:00:00 LGA        1     1     5  39.9
+    ##  7  2013 N619AA  AA      2013-01-01 05:00:00 EWR        1     1     5  39.0
+    ##  8  2013 N619AA  AA      2013-01-01 05:00:00 JFK        1     1     5  39.0
+    ##  9  2013 N619AA  AA      2013-01-01 05:00:00 LGA        1     1     5  39.9
+    ## 10  2013 N804JB  B6      2013-01-01 05:00:00 EWR        1     1     5  39.0
+    ## # ... with 2,878 more rows, and 8 more variables: dewp <dbl>, humid <dbl>,
+    ## #   wind_dir <dbl>, wind_speed <dbl>, wind_gust <dbl>, precip <dbl>,
+    ## #   pressure <dbl>, visib <dbl>
+
 ### 5. Add `weather` information to the `flights2` dataset by matching only "time\_hour" variable
+
+``` r
+flights2 %>% 
+  left_join(weather, by = c("time_hour"))
+```
+
+    ## # A tibble: 2,888 x 18
+    ##    year.x tailnum carrier time_hour           origin year.y month   day
+    ##     <int> <chr>   <chr>   <dttm>              <chr>   <dbl> <dbl> <int>
+    ##  1   2013 N14228  UA      2013-01-01 05:00:00 EWR      2013     1     1
+    ##  2   2013 N14228  UA      2013-01-01 05:00:00 JFK      2013     1     1
+    ##  3   2013 N14228  UA      2013-01-01 05:00:00 LGA      2013     1     1
+    ##  4   2013 N24211  UA      2013-01-01 05:00:00 EWR      2013     1     1
+    ##  5   2013 N24211  UA      2013-01-01 05:00:00 JFK      2013     1     1
+    ##  6   2013 N24211  UA      2013-01-01 05:00:00 LGA      2013     1     1
+    ##  7   2013 N619AA  AA      2013-01-01 05:00:00 EWR      2013     1     1
+    ##  8   2013 N619AA  AA      2013-01-01 05:00:00 JFK      2013     1     1
+    ##  9   2013 N619AA  AA      2013-01-01 05:00:00 LGA      2013     1     1
+    ## 10   2013 N804JB  B6      2013-01-01 05:00:00 EWR      2013     1     1
+    ## # ... with 2,878 more rows, and 10 more variables: hour <int>, temp <dbl>,
+    ## #   dewp <dbl>, humid <dbl>, wind_dir <dbl>, wind_speed <dbl>,
+    ## #   wind_gust <dbl>, precip <dbl>, pressure <dbl>, visib <dbl>
 
 Types of filtering join
 -----------------------
