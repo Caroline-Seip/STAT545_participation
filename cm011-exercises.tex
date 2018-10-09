@@ -1,0 +1,607 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={cm011 Exercises: R as a programming language},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\newcommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{cm011 Exercises: R as a programming language}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{}
+    \preauthor{}\postauthor{}
+    \date{}
+    \predate{}\postdate{}
+  
+
+\begin{document}
+\maketitle
+
+\section{Part I}\label{part-i}
+
+\subsection{Types and Modes and Classes, Oh
+My!}\label{types-and-modes-and-classes-oh-my}
+
+R objects have a \emph{type}, a \emph{mode}, and a \emph{class}. This
+can be confusing:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a <-}\StringTok{ }\DecValTok{3}
+\KeywordTok{print}\NormalTok{(}\KeywordTok{typeof}\NormalTok{(a))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "double"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{mode}\NormalTok{(a))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "numeric"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{class}\NormalTok{(a))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "numeric"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{typeof}\NormalTok{(iris))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "list"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{mode}\NormalTok{(iris))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "list"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{class}\NormalTok{(iris))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "data.frame"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{typeof}\NormalTok{(sum))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "builtin"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{mode}\NormalTok{(sum))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "function"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{print}\NormalTok{(}\KeywordTok{class}\NormalTok{(sum))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "function"
+\end{verbatim}
+
+Usually, there's no need to fuss about these differences: just use the
+\texttt{is.*()} family of functions. Give it a try:
+
+We can also coerce objects to take on a different form, typically using
+the \texttt{as.*()} family of functions. We can't always coerce! You'll
+get a sense of this over time, but try:
+
+\begin{itemize}
+\tightlist
+\item
+  Coercing a number to a character.
+\item
+  Coercing a character to a number.
+\item
+  Coercing a number to a data.frame. \texttt{letters} to a data.frame.
+\end{itemize}
+
+There is also a slight difference between coercion and conversion, but
+this is usually not important.
+
+\subsection{Vectors}\label{vectors}
+
+Vectors store multiple entries of a data type. You'll discover that they
+show up just about everywhere in R, so they're fundamental and extremely
+important.
+
+\subsubsection{Vector Construction and Basic
+Subsetting}\label{vector-construction-and-basic-subsetting}
+
+We've seen vectors as columns of data frames:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{mtcars}\OperatorTok{$}\NormalTok{hp}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 110 110  93 110 175 105 245  62  95 123 123 180 180 180 205 215 230
+## [18]  66  52  65  97 150 150 245 175  66  91 113 264 175 335 109
+\end{verbatim}
+
+Use the \texttt{c()} function to make a vector consisting of the course
+code (\texttt{"STAT"} and \texttt{545}). Notice the coercion. Vectors
+must be homogeneous.
+
+Subset the first entry. Remove the first entry. Note the base-1 system.
+
+Use \texttt{\textless{}-} to change the second entry to ``545A''. Using
+the same approach, add a third entry, ``S01''.
+
+Subset the first and third entry. Order matters! Subset the third and
+first entry.
+
+Explore integer sequences, especially negatives and directions.
+Especially \texttt{1:0} that might show up in loops!
+
+Singletons are also vectors. Check using \texttt{is.vector}.
+
+\subsubsection{Vectorization and
+Recycling}\label{vectorization-and-recycling}
+
+A key aspect of R is its vectorization. Let's work with the vector
+following vector:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(a <-}\StringTok{ }\DecValTok{7}\OperatorTok{:-}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  7  6  5  4  3  2  1  0 -1 -2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(n <-}\StringTok{ }\KeywordTok{length}\NormalTok{(a))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 10
+\end{verbatim}
+
+Square each component:
+
+Multiply each component by 1 through its length:
+
+It's important to know that R will silently recycle! Unless the length
+of one vector is not divisible by the other. Let's see:
+
+This is true of comparison operators, too. Make a vector of logicals
+using a comparison operator.
+
+Now try a boolean operator. Note that \&\& and \textbar{}\textbar{} are
+NOT vectorized!
+
+Recycling works with assignment, too. Replace the entire vector a with
+1:2 repeated:
+
+\subsubsection{Special Subsetting}\label{special-subsetting}
+
+We can subset vectors by names and logicals, too.
+
+Recall the course vector:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{course <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"STAT"}\NormalTok{, }\StringTok{"545A"}\NormalTok{, }\StringTok{"S01"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Let's give the components some names (``subject'', ``code'', and
+``section'') using three methods:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Using the setNames function.
+\end{enumerate}
+
+\begin{itemize}
+\tightlist
+\item
+  Notice that the vector does not change!!
+\end{itemize}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{1}
+\item
+  Using the names function with \texttt{\textless{}-}. Also, just
+  explore the names function.
+\item
+  Re-constructing the vector, specifying names within \texttt{c()}.
+\end{enumerate}
+
+Subset the entry labelled ``section'' and ``subject''.
+
+Amazingly, we can also subset by a vector of logicals (which will be
+recycled!). Let's work with our integer sequence vector again:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(a <-}\StringTok{ }\DecValTok{7}\OperatorTok{:-}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  7  6  5  4  3  2  1  0 -1 -2
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(n <-}\StringTok{ }\KeywordTok{length}\NormalTok{(a))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 10
+\end{verbatim}
+
+\subsection{Lists}\label{lists}
+
+Unlike vectors, which are atomic/homogeneous, a list in R is
+heterogeneous.
+
+Try storing the course code (\texttt{"STAT"} and \texttt{545}) again,
+but this time in a list. Use the \texttt{list()} function.
+
+Lists can hold pretty much anything, and can also be named. Let's use
+the following list:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(my_list <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\DataTypeTok{year=}\DecValTok{2018}\NormalTok{, }\DataTypeTok{instructor=}\KeywordTok{c}\NormalTok{(}\StringTok{"Vincenzo"}\NormalTok{, }\StringTok{"Coia"}\NormalTok{), }\DataTypeTok{fav_fun=}\NormalTok{typeof))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $year
+## [1] 2018
+## 
+## $instructor
+## [1] "Vincenzo" "Coia"    
+## 
+## $fav_fun
+## function (x) 
+## .Internal(typeof(x))
+## <bytecode: 0x7f87e44b9e38>
+## <environment: namespace:base>
+\end{verbatim}
+
+Subsetting a list works similarly to vectors. Try subsetting the first
+element of \texttt{my\_list}; try subsettig the first \emph{component}
+of the list. Notice the difference!
+
+Try also subsetting by name:
+
+Smells a little like \texttt{data.frame}s. It turns out a
+\texttt{data.frame} is a special type of list:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{(small_df <-}\StringTok{ }\NormalTok{tibble}\OperatorTok{::}\KeywordTok{tibble}\NormalTok{(}\DataTypeTok{x=}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{, }\DataTypeTok{y=}\NormalTok{letters[}\DecValTok{1}\OperatorTok{:}\DecValTok{5}\NormalTok{]))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 5 x 2
+##       x y    
+##   <int> <chr>
+## 1     1 a    
+## 2     2 b    
+## 3     3 c    
+## 4     4 d    
+## 5     5 e
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{is.list}\NormalTok{(small_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{as.list}\NormalTok{(small_df)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $x
+## [1] 1 2 3 4 5
+## 
+## $y
+## [1] "a" "b" "c" "d" "e"
+\end{verbatim}
+
+Note that there's a difference between a list of one object, and that
+object itself! This is different from vectors.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{identical}\NormalTok{(}\KeywordTok{list}\NormalTok{(}\DecValTok{4}\NormalTok{), }\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{identical}\NormalTok{(}\KeywordTok{c}\NormalTok{(}\DecValTok{4}\NormalTok{), }\DecValTok{4}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+
+\section{Part II}\label{part-ii}
+
+\subsection{Global Environment}\label{global-environment}
+
+When you assign variables in R, the variable name and contents are
+stored in an R environment called a global environment.
+
+See what's in the Global Environment by:
+
+\begin{itemize}
+\tightlist
+\item
+  Executing \texttt{ls()}.
+\item
+  Looking in RStudio, in the ``Environments'' pane.
+\end{itemize}
+
+Making an assignment ``binds'' an object to a name within an
+environment. For example, writing \texttt{a\ \textless{}-\ 5} assigns
+the object \texttt{5} to the name \texttt{a} in the global environment.
+
+The act of ``searching for the right object to return'' is called
+scoping.
+
+By the way: the global environment is an object, too! It's the output of
+\texttt{globalenv()}, and is also stored in the variable
+\texttt{.GlobalEnv}:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{globalenv}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## <environment: R_GlobalEnv>
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{.GlobalEnv}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## <environment: R_GlobalEnv>
+\end{verbatim}
+
+\subsection{The Search Path}\label{the-search-path}
+
+How does R know what \texttt{iris} is, yet \texttt{iris} does not appear
+in the global environment? What about functions like \texttt{length},
+\texttt{sum}, and \texttt{print} (which are all objects, too)?
+
+Let's explore.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Each package has its own environment.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Install and load the \texttt{pryr} package, and use \texttt{ls()} to
+    list its bindings (its name is ``package:pryr'').
+  \end{itemize}
+\item
+  There's a difference between an \emph{environment} and its
+  \emph{name}. Get the environment with name ``package:pryr'' using the
+  \texttt{as.environment()} function.
+\item
+  Each environment has a parent. Use \texttt{parent.env()} to find the
+  parent of the global environment.
+\item
+  There are packages that come pre-loaded with R, and they're loaded in
+  a sequence called the search path. Use \texttt{search()} to identify
+  that path; then see it in RStudio.
+\end{enumerate}
+
+First scoping rule: R looks to the parent environment if it can't find
+an object where it is.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{4}
+\item
+  Use \texttt{pryr::where()} to determine where the first binding to the
+  name \texttt{iris} is located.
+\item
+  Override \texttt{iris} with, say, a numeric. Now \texttt{where()} is
+  it? Can you extract the original?
+\item
+  Override \texttt{sum} with, say, a numeric. \texttt{where()} is
+  \texttt{sum} now? Can you still use the original \texttt{sum()}
+  function?
+\end{enumerate}
+
+Special scoping rule for functions! R knows whether or not to look for a
+function.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{7}
+\tightlist
+\item
+  Look at the source code of the \texttt{pryr:where()} function. It
+  contains a line that creates a binding for ``env''. Why, then, is
+  \texttt{env} nowhere to be found? Answer: execution environments.
+\end{enumerate}
+
+
+\end{document}
