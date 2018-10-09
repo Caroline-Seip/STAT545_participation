@@ -544,11 +544,52 @@ of one vector is not divisible by the other. Let's see:
 This is true of comparison operators, too. Make a vector of logicals
 using a comparison operator.
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{>}\StringTok{ }\DecValTok{0} 
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE
+\end{verbatim}
+
 Now try a boolean operator. Note that \&\& and \textbar{}\textbar{} are
 NOT vectorized!
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{>}\StringTok{ }\DecValTok{0} \OperatorTok{&}\StringTok{ }\NormalTok{a }\OperatorTok{<}\StringTok{ }\DecValTok{5}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] FALSE FALSE FALSE  TRUE  TRUE  TRUE  TRUE FALSE FALSE FALSE
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a }\OperatorTok{>}\StringTok{ }\DecValTok{0} \OperatorTok{&&}\StringTok{ }\NormalTok{a }\OperatorTok{<}\StringTok{ }\DecValTok{5}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] FALSE
+\end{verbatim}
+
 Recycling works with assignment, too. Replace the entire vector a with
 1:2 repeated:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a[}\DecValTok{1}\OperatorTok{:}\NormalTok{n] <-}\StringTok{ }\DecValTok{1}\OperatorTok{:}\DecValTok{2}
+\NormalTok{a}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] 1 2 1 2 1 2 1 2 1 2
+\end{verbatim}
 
 \subsubsection{Special Subsetting}\label{special-subsetting}
 
@@ -559,8 +600,13 @@ Recall the course vector:
 \begin{Shaded}
 \begin{Highlighting}[]
 \NormalTok{course <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"STAT"}\NormalTok{, }\StringTok{"545A"}\NormalTok{, }\StringTok{"S01"}\NormalTok{)}
+\NormalTok{course}
 \end{Highlighting}
 \end{Shaded}
+
+\begin{verbatim}
+## [1] "STAT" "545A" "S01"
+\end{verbatim}
 
 Let's give the components some names (``subject'', ``code'', and
 ``section'') using three methods:
@@ -578,17 +624,80 @@ Let's give the components some names (``subject'', ``code'', and
   Notice that the vector does not change!!
 \end{itemize}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{setNames}\NormalTok{(course, }\KeywordTok{c}\NormalTok{(}\StringTok{"subject"}\NormalTok{, }\StringTok{"code"}\NormalTok{, }\StringTok{"section"}\NormalTok{))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## subject    code section 
+##  "STAT"  "545A"   "S01"
+\end{verbatim}
+
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \setcounter{enumi}{1}
+\tightlist
 \item
   Using the names function with \texttt{\textless{}-}. Also, just
   explore the names function.
+\end{enumerate}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{names}\NormalTok{(course) <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\StringTok{"subject"}\NormalTok{, }\StringTok{"code"}\NormalTok{, }\StringTok{"section"}\NormalTok{)}
+\NormalTok{course}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## subject    code section 
+##  "STAT"  "545A"   "S01"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{names}\NormalTok{(course)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "subject" "code"    "section"
+\end{verbatim}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\setcounter{enumi}{2}
+\tightlist
 \item
   Re-constructing the vector, specifying names within \texttt{c()}.
 \end{enumerate}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{course <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\DataTypeTok{subject=}\StringTok{"STAT"}\NormalTok{, }\DataTypeTok{code=}\StringTok{"545A"}\NormalTok{, }\DataTypeTok{section=}\StringTok{"S01"}\NormalTok{)}
+\NormalTok{course}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## subject    code section 
+##  "STAT"  "545A"   "S01"
+\end{verbatim}
+
 Subset the entry labelled ``section'' and ``subject''.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{course[}\KeywordTok{c}\NormalTok{(}\StringTok{"section"}\NormalTok{,}\StringTok{"subject"}\NormalTok{)]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## section subject 
+##   "S01"  "STAT"
+\end{verbatim}
 
 Amazingly, we can also subset by a vector of logicals (which will be
 recycled!). Let's work with our integer sequence vector again:
@@ -613,6 +722,16 @@ recycled!). Let's work with our integer sequence vector again:
 ## [1] 10
 \end{verbatim}
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{a[a }\OperatorTok{>}\StringTok{ }\DecValTok{0}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 7 6 5 4 3 2 1
+\end{verbatim}
+
 \subsection{Lists}\label{lists}
 
 Unlike vectors, which are atomic/homogeneous, a list in R is
@@ -620,6 +739,21 @@ heterogeneous.
 
 Try storing the course code (\texttt{"STAT"} and \texttt{545}) again,
 but this time in a list. Use the \texttt{list()} function.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{course <-}\StringTok{ }\KeywordTok{list}\NormalTok{(}\StringTok{"STAT"}\NormalTok{, }\DecValTok{545}\NormalTok{)}
+\NormalTok{course}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [[1]]
+## [1] "STAT"
+## 
+## [[2]]
+## [1] 545
+\end{verbatim}
 
 Lists can hold pretty much anything, and can also be named. Let's use
 the following list:
@@ -640,7 +774,7 @@ the following list:
 ## $fav_fun
 ## function (x) 
 ## .Internal(typeof(x))
-## <bytecode: 0x7fbceb32cdf0>
+## <bytecode: 0x7fe9e495f9f0>
 ## <environment: namespace:base>
 \end{verbatim}
 
@@ -648,7 +782,49 @@ Subsetting a list works similarly to vectors. Try subsetting the first
 element of \texttt{my\_list}; try subsettig the first \emph{component}
 of the list. Notice the difference!
 
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{my_list[}\DecValTok{2}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $instructor
+## [1] "Vincenzo" "Coia"
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{my_list[[}\DecValTok{2}\NormalTok{]]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] "Vincenzo" "Coia"
+\end{verbatim}
+
 Try also subsetting by name:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{my_list[}\StringTok{"year"}\NormalTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $year
+## [1] 2018
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{my_list}\OperatorTok{$}\NormalTok{year}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 2018
+\end{verbatim}
 
 Smells a little like \texttt{data.frame}s. It turns out a
 \texttt{data.frame} is a special type of list:
