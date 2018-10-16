@@ -1,9 +1,6 @@
 ---
 title: 'cm011 Exercises: R as a programming language'
-output:
-  pdf_document: default
-  html_document:
-    df_print: paged
+output: github_document
 ---
 
 # Part I
