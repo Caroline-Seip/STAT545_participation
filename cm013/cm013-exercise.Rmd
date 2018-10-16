@@ -1,7 +1,9 @@
 ---
 title: "cm013 Exercise"
-output: html_notebook
-editor_options: 
+output:
+  html_document:
+    df_print: paged
+editor_options:
   chunk_output_type: inline
 ---
 
@@ -62,11 +64,10 @@ p_scales +
 ```{r}
 library(scales)
 p_scales +
-    scale_x_log10(labels=FILL_THIS_IN) + #missed this one
+    scale_x_log10() + #missed this one
     scale_colour_continuous(
         trans  = "log10", 
-        breaks = 10^(1:10),
-        labels = FILL_THIS_IN
+        breaks = 10^(1:10)
     ) +
     scale_y_continuous(breaks=10*(1:10))
 ```
@@ -92,18 +93,6 @@ p_scales +
 4. Use `viridis` to change the colour to a colour-blind friendly scheme
     - Hint: add `scale_colour_viridis_c` (`c` stands for continuous; `d` discrete).
     - You can choose a palette with `option`.
-
-```{r}
-p_scales +
-    scale_x_log10(labels=dollar_format()) +
-    scale_colour_continuous(
-        trans   = "log10",
-        breaks  = 10^(1:10),
-        labels  = comma_format(),
-        palette = "Greens"
-    ) +
-    scale_y_continuous(breaks=10*(1:10))
-```
 
 # Theming
 
@@ -162,35 +151,25 @@ Consider the following plot:
 
 1. Convert it to a `plotly` object by applying the `ggplotly()` function:
 
-```{r}
-install.packages("plotly")
-library(gapminder)
-library(tidyverse)
-```
-
 2. You can save a plotly graph locally as an html file. Try saving the above:
     - NOTE: plotly graphs don't seem to show up in Rmd _notebooks_, but they do with Rmd _documents_.
 
 ```{r}
-p %>% 
-    ggplotly() %>% 
-    htmlwidgets::saveWidget("LOCATION_GOES_HERE")
+
 ```
 
 
 3. Run this code to see the json format underneath:
 
 ```{r}
-p %>% 
-    ggplotly() %>% 
-    plotly_json() #plotly still installing...
+
 ```
 
 
 4. Check out code to make a plotly object from scratch using `plot_ly()` -- scatterplot of gdpPercap vs lifeExp.
     - Check out the [cheat sheet](https://images.plot.ly/plotly-documentation/images/r_cheat_sheet.pdf).
 
-```{r}
+
 plot_ly(gapminder, 
         x = ~gdpPercap, 
         y = ~lifeExp, 
@@ -198,11 +177,11 @@ plot_ly(gapminder,
         mode = "markers",
         opacity = 0.2) %>% 
     layout(xaxis = list(type = "log"))
-```
+
 
 5. Add population to form a z-axis for a 3D plot:
 
-```{r}
+
 plot_ly(gapminder, 
         x = ~gdpPercap, 
         y = ~lifeExp, 
